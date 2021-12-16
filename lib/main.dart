@@ -4,6 +4,7 @@ import 'generate_qr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import './widget/modalSheet.dart';
 
 void main() => runApp(const MaterialApp(home: MyHome()));
 
@@ -37,7 +38,6 @@ class MyHome extends StatelessWidget {
               child: const Text('Generate QR'),
             ),
           ),
-
         ],
       ),
     );
@@ -83,6 +83,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                   if (result != null)
                     Text(
                         'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                  
                   else
                     const Text('Scan a code'),
                   Row(
@@ -180,7 +181,9 @@ class _QRViewExampleState extends State<QRViewExample> {
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(
+    QRViewController controller,
+  ) {
     setState(() {
       this.controller = controller;
     });

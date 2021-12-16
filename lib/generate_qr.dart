@@ -34,6 +34,7 @@ class _GenerateQRPageState extends State<GenerateQRPage> {
                 margin: EdgeInsets.all(20),
                 child: TextField(
                   controller: controller,
+                  maxLines: null,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(), labelText: 'Enter URL'),
                 ),
