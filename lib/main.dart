@@ -56,6 +56,33 @@ class _QRViewExampleState extends State<QRViewExample> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
+  String cameraState = 'Pause';
+
+  void toggleCamera() async{
+    if (cameraState == 'Pause'){
+      try{
+        await controller?.pauseCamera();
+        setState(() {
+          cameraState = 'Resume';
+        });
+      }catch(error){
+        cameraState = 'Pause';
+        print(error);
+      }
+    }
+    else if(cameraState == 'Resume'){
+      try{
+        await controller?.resumeCamera();
+        setState(() {
+          cameraState = 'Pause';
+        });
+      }catch(error){
+        cameraState = 'Resume';
+        print(error);
+      }
+    }
+  }
+
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
@@ -131,14 +158,12 @@ class _QRViewExampleState extends State<QRViewExample> {
                       Container(
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: const Text('pause',
+                          onPressed: toggleCamera,
+                          child: Text(cameraState,
                               style: TextStyle(fontSize: 20)),
                         ),
                       ),
-                      Container(
+                      /*Container(
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                           onPressed: () async {
@@ -147,7 +172,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                           child: const Text('resume',
                               style: TextStyle(fontSize: 20)),
                         ),
-                      ),
+                      ),*/
                       result == null
                           ? Container()
                           : Container(
