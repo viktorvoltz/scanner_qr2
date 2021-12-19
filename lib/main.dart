@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:convert' show utf8;
 import 'dart:io';
 import 'generate_qr.dart';
 import 'package:flutter/foundation.dart';
@@ -57,6 +58,7 @@ class _QRViewExampleState extends State<QRViewExample> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   String cameraState = 'Pause';
+  late List<int> encoded;
 
   void toggleCamera() async{
     if (cameraState == 'Pause'){
@@ -118,15 +120,19 @@ class _QRViewExampleState extends State<QRViewExample> {
                     children: <Widget>[
                       Container(
                         margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
+                        child: IconButton(
                             onPressed: () async {
                               await controller?.toggleFlash();
                               setState(() {});
                             },
-                            child: FutureBuilder(
+                            icon: FutureBuilder(
                               future: controller?.getFlashStatus(),
                               builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
+                                if (snapshot.data == false){
+                                  return Icon(Icons.flash_off);
+                                }else{
+                                  return Icon(Icons.flash_on);
+                                }
                               },
                             )),
                       ),
@@ -163,16 +169,6 @@ class _QRViewExampleState extends State<QRViewExample> {
                               style: TextStyle(fontSize: 20)),
                         ),
                       ),
-                      /*Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: const Text('resume',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),*/
                       result == null
                           ? Container()
                           : Container(
@@ -190,7 +186,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                                       return Container(
                                         padding: EdgeInsets.all(20),
                                         height: 200,
-                                        child: Text('Data: ${result!.code}'),
+                                        child: Text('Data: ${utf8.decode(encoded)}'),
                                       );
                                     }
                                   
@@ -238,6 +234,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
+        encoded = utf8.encode(result!.code ?? '');
       });
     });
   }
