@@ -1,49 +1,21 @@
 import 'dart:developer';
 import 'dart:convert' show utf8;
 import 'dart:io';
+import 'package:scanner_qr/screens/splashscreen.dart';
+
 import 'generate_qr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import './widget/modalSheet.dart';
 
-void main() => runApp(const MaterialApp(home: MyHome()));
-
-class MyHome extends StatelessWidget {
-  const MyHome({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Flutter Demo Home Page')),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const QRViewExample(),
-                ));
-              },
-              child: const Text('qrView'),
-            ),
-          ),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => GenerateQRPage(),
-                ));
-              },
-              child: const Text('Generate QR'),
-            ),
-          ),
-        ],
+void main() => runApp(
+      const MaterialApp(
+        home: SplashScreen(),
       ),
     );
-  }
-}
+
+
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({Key? key}) : super(key: key);
@@ -60,25 +32,24 @@ class _QRViewExampleState extends State<QRViewExample> {
   String cameraState = 'Pause';
   late List<int> encoded;
 
-  void toggleCamera() async{
-    if (cameraState == 'Pause'){
-      try{
+  void toggleCamera() async {
+    if (cameraState == 'Pause') {
+      try {
         await controller?.pauseCamera();
         setState(() {
           cameraState = 'Resume';
         });
-      }catch(error){
+      } catch (error) {
         cameraState = 'Pause';
         print(error);
       }
-    }
-    else if(cameraState == 'Resume'){
-      try{
+    } else if (cameraState == 'Resume') {
+      try {
         await controller?.resumeCamera();
         setState(() {
           cameraState = 'Pause';
         });
-      }catch(error){
+      } catch (error) {
         cameraState = 'Resume';
         print(error);
       }
@@ -128,10 +99,16 @@ class _QRViewExampleState extends State<QRViewExample> {
                             icon: FutureBuilder(
                               future: controller?.getFlashStatus(),
                               builder: (context, snapshot) {
-                                if (snapshot.data == false){
-                                  return Icon(Icons.flash_off, size: 16,);
-                                }else{
-                                  return Icon(Icons.flash_on, size: 16,);
+                                if (snapshot.data == false) {
+                                  return Icon(
+                                    Icons.flash_off,
+                                    size: 16,
+                                  );
+                                } else {
+                                  return Icon(
+                                    Icons.flash_on,
+                                    size: 16,
+                                  );
                                 }
                               },
                             )),
@@ -146,8 +123,11 @@ class _QRViewExampleState extends State<QRViewExample> {
                             icon: FutureBuilder(
                               future: controller?.getCameraInfo(),
                               builder: (context, snapshot) {
-                                if (describeEnum(snapshot.data!) == 'back'){
-                                  return Icon(Icons.camera_rear, size: 16,);
+                                if (describeEnum(snapshot.data!) == 'back') {
+                                  return Icon(
+                                    Icons.camera_rear,
+                                    size: 16,
+                                  );
                                 } else {
                                   return Icon(Icons.camera_front, size: 16);
                                 }
@@ -164,8 +144,8 @@ class _QRViewExampleState extends State<QRViewExample> {
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                           onPressed: toggleCamera,
-                          child: Text(cameraState,
-                              style: TextStyle(fontSize: 20)),
+                          child:
+                              Text(cameraState, style: TextStyle(fontSize: 20)),
                         ),
                       ),
                       result == null
@@ -173,23 +153,23 @@ class _QRViewExampleState extends State<QRViewExample> {
                           : Container(
                               margin: const EdgeInsets.all(8),
                               child: TextButton(
-                                child: Text('view data', style: TextStyle(fontSize: 16)),
+                                child: Text('view data',
+                                    style: TextStyle(fontSize: 16)),
                                 onPressed: () {
                                   showModalBottomSheet(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0)
-                                    ),
-                                    backgroundColor: Colors.white,
-                                    context: context, 
-                                    builder: (context){
-                                      return Container(
-                                        padding: EdgeInsets.all(20),
-                                        height: 200,
-                                        child: Text('Data: ${utf8.decode(encoded)}'),
-                                      );
-                                    }
-                                  
-                                  );
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0)),
+                                      backgroundColor: Colors.white,
+                                      context: context,
+                                      builder: (context) {
+                                        return Container(
+                                          padding: EdgeInsets.all(20),
+                                          height: 200,
+                                          child: Text(
+                                              'Data: ${utf8.decode(encoded)}'),
+                                        );
+                                      });
                                 },
                               ))
                     ],
