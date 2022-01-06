@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
           width: double.infinity,
           child: Text('scanner_Qr', style: TextStyle(fontSize: 18, color: Colors.white),),
           decoration: BoxDecoration(
-            color: Colors.black
+            color: Colors.purple
           ),
         )
       ),

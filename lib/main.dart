@@ -123,13 +123,18 @@ class _QRViewExampleState extends State<QRViewExample> {
                             icon: FutureBuilder(
                               future: controller?.getCameraInfo(),
                               builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Icon(Icons.device_unknown);
+                                }
                                 if (describeEnum(snapshot.data!) == 'back') {
                                   return Icon(
                                     Icons.camera_rear,
                                     size: 16,
                                   );
-                                } else {
+                                } else if(describeEnum(snapshot.data!) == 'front'){
                                   return Icon(Icons.camera_front, size: 16);
+                                } else{
+                                  return Icon(Icons.device_unknown);
                                 }
                               },
                             )),
